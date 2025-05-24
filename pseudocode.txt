@@ -1,0 +1,20 @@
+step by step
+
+#1 Present game
+-> Choose where to place your marker by entering a number.
+-> Example: by entering '5', you will be placing your marker in the middle of the grid
+
+# First game
+-> Are you ready? Y / N 
+-> *Display current board*
+    - Print 3 lists
+    - initial: ['_', '_', '_']
+-> Your turn. Place your marker.
+-> Prompt: Enter a number between 1-9
+    - eg: number 6
+    - 
+
+-> *Display current board*
+-> Computer's turn.
+-> *Display current board*
+-> Your turn. Place your marker.
