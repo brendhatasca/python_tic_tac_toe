@@ -21,9 +21,6 @@ def play_again_prompt():
         else:
             if choice in ('Y', 'N'):
                 return choice == 'Y'
-            # else:
-            #     print('Thanks for playing! :)')
-            # break
 
 def is_board_full(board):
 
@@ -34,7 +31,7 @@ def is_board_full(board):
     
     return True
 
-def check_winner(current_player, board):
+def check_winner(board):
 
     markers = ('X', 'O')
 
@@ -74,9 +71,6 @@ def get_player_input(board):
                     raise IndexError("Column out of bounds.")
                 
             except ValueError:
-                if row.upper() == 'Q' or column.upper() == 'Q':
-                    print('See you soon!')
-                    exit()
                 print('Not an integer. Try again.')
                 continue
 
@@ -94,10 +88,6 @@ def game():
     board = [[" " for _ in range(3)] for _ in range(3)]
     markers = ['X', 'O']
 
-    board[0][0] = 'X'
-    board[1][1] = 'X'
-    board[0][1] = 'O'
-
     current_player = markers[0]
     
     while True:
@@ -111,7 +101,7 @@ def game():
 
         # check_winner(current_player, board)
 
-        if check_winner(current_player, board):
+        if check_winner(board):
             print_board(board)
             print(f'{current_player} wins!')
             return
