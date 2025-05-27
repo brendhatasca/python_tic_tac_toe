@@ -6,51 +6,47 @@ def clear_screen():
 def print_board(board):
 
     for row in board:
-        print(row)
+        print(" | ".join(row))
 
 def play_again_prompt():
 
     while True:
         try:
-            play_again = input('Would you like to play again? (Y/N) ')
-            if play_again.upper() not in ('Y', 'N'):
+            choice = input('Would you like to play again? (Y/N) ').strip().upper()
+            if choice not in ('Y', 'N'):
                 raise ValueError('Wrong input value.')
         except ValueError:
             print('Please choose Y or N.')
             continue
         else:
-            if play_again.upper() == 'Y':
-                clear_screen()
-                game()
-            else:
-                print('Thanks for playing! :)')
-            break
+            if choice in ('Y', 'N'):
+                return choice == 'Y'
+            # else:
+            #     print('Thanks for playing! :)')
+            # break
 
 def is_board_full(board):
 
     for row in board:
         for col in row:
             if col == " ":
-                return
+                return False
     
-    print("Tie!")
-    play_again_prompt()
-
-
+    return True
 
 def check_winner(current_player, board):
 
-    is_winner = False
+    markers = ('X', 'O')
 
     # check if all markers in the same row are the same
     for row in board:
-        if len(set(row)) == 1 and row[0] in ('X', 'O'):
-            is_winner = True
+        if len(set(row)) == 1 and row[0] in markers:
+            return True
 
     # check if all columns are the same
     for col in zip(*board):
-        if len(set(col)) == 1 and col[0] in ('X', 'O'):
-            is_winner = True
+        if len(set(col)) == 1 and col[0] in markers:
+            return True
         
     # check for diagonal win - check if row index == column index
     # defining variables and grabbing currents elements on the board
@@ -58,16 +54,10 @@ def check_winner(current_player, board):
     anti_diagonal = [board[i][len(board) - 1 - i] for i in range(len(board))]
 
     # check if elements in the list are the same
-    if len(set(diagonal)) == 1 and diagonal[0] in ('X', 'Y'):
-        is_winner = True
-    if len(set(anti_diagonal)) == 1 and anti_diagonal[0] in ('X', 'Y'):
-        is_winner = True
-
-
-    if is_winner == True:
-        print_board(board)
-        print(f'{current_player} wins!')
-        play_again_prompt()
+    if len(set(diagonal)) == 1 and diagonal[0] in markers:
+        return True
+    if len(set(anti_diagonal)) == 1 and anti_diagonal[0] in markers:
+        return True
 
     
 
@@ -84,6 +74,9 @@ def get_player_input(board):
                     raise IndexError("Column out of bounds.")
                 
             except ValueError:
+                if row.upper() == 'Q' or column.upper() == 'Q':
+                    print('See you soon!')
+                    exit()
                 print('Not an integer. Try again.')
                 continue
 
@@ -99,8 +92,13 @@ def get_player_input(board):
 
 def game():
     board = [[" " for _ in range(3)] for _ in range(3)]
+    markers = ['X', 'O']
 
-    current_player = 'X'
+    board[0][0] = 'X'
+    board[1][1] = 'X'
+    board[0][1] = 'O'
+
+    current_player = markers[0]
     
     while True:
 
@@ -111,18 +109,27 @@ def game():
         row, column = get_player_input(board)
         board[row][column] = current_player
 
-        check_winner(current_player, board)
+        # check_winner(current_player, board)
 
-        is_board_full(board)
+        if check_winner(current_player, board):
+            print_board(board)
+            print(f'{current_player} wins!')
+            return
 
-        if current_player == 'X':
-            current_player = 'O'
-        else:
-            current_player = 'X'
-            continue
+        if is_board_full(board):
+            print("Tie!")
+            return
+
+        current_player = markers[1] if current_player == markers[0] else markers[0]
 
 
-game()
+def main():
+    while True:
+        game()
+        if not play_again_prompt():
+            print('Thanks for playing! :)')
+            break
+
+main()
+
 # print_board(game())
-
-    
